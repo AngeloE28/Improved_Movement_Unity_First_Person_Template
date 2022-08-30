@@ -82,6 +82,7 @@ namespace StarterAssets
 		private float _fallTimeoutDelta;
 		private float _currentCoyoteTimer;
 		private float _currentJumpBufferTimer;
+		private float _jumpHeldTimer;
 
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -236,10 +237,19 @@ namespace StarterAssets
 			if (_input.jump)
 			{
 				_currentJumpBufferTimer = JumpBufferTimer;
+				_jumpHeldTimer += Time.deltaTime;
 			}
 			else
 			{
 				_currentJumpBufferTimer -= Time.deltaTime;
+				_jumpHeldTimer = 0.0f;
+			}
+
+			// Player can't keep holding the jump button to auto jump after landing
+			float jumpHoldThreshold = 0.5f;
+			if (_jumpHeldTimer > jumpHoldThreshold)
+			{
+				_input.jump = false;
 			}
 
 			if (Grounded)
@@ -294,8 +304,6 @@ namespace StarterAssets
 					_jumped = true;
 				}
 
-				// reset the jump timeout timer
-				_jumpTimeoutDelta = JumpTimeout;
 
 				// fall timeout
 				if (_fallTimeoutDelta >= 0.0f)
@@ -305,9 +313,9 @@ namespace StarterAssets
 
 				// Apex of jump is reached
 				if (_verticalVelocity < 0)
-				{					
-					// Do not allow jump, until it reaches the floor
-					_input.jump = false;
+				{
+					// reset the jump timeout timer
+					_jumpTimeoutDelta = JumpTimeout;
 					_currentGravity = ApexGravity;
 				}
 				else
