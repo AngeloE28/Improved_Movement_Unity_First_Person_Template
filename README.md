@@ -1,5 +1,7 @@
 # Improved_Movement_Unity_First_Person_Template
 <p>
+This project uses <strong>Unity 2021.3.0f1 LTS</strong>
+<br>
 Improved the movement of the original unity first person template with extra features
 <br>
 This only extends the original scripts of the template and was made with beginners in mind
